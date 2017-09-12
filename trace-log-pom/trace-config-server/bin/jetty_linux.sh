@@ -2,7 +2,7 @@
 #docker_qc
 BASE_HOME="/home/trace-log/trace-config-server/sources"
 #qc
-#BASE_HOME="/home/dockerfile/trace-config-server/sources"
+#BASE_HOME="/home/dockerfile/irms-service-registry-center/sources"
 
 
 cd $BASE_HOME
@@ -33,48 +33,49 @@ JETTY_PID="/data/logs/jetty.pid"
 
 
 function status {
-         test -n   "`ps -ef |grep "$APP_JAR" |grep -v grep `"  && echo 1  || echo 0
+	 test -n   "`ps -ef |grep "$APP_JAR" |grep -v grep `"  && echo 1  || echo 0
 }
 
 function start {
-        if [ "`status`" == "1"  ] ; then
-                echo "app jetty is woring,do nothing!"
-                exit 1
-        fi
-        $JAVA_CMD   $JAVA_OPTS -Dloader.path="lib/*" -jar   $BASE_HOME/$APP_JAR --spring.config.location=file:/home/trace-properties/trace-config-server/ >> /data/trace-log/config-server/"$log_file_url"  2>&1 & 
-        echo "started $APP_JAR"
+	if [ "`status`" == "1"  ] ; then
+		echo "app jetty is woring,do nothing!"
+		exit 1
+	fi
+	$JAVA_CMD   $JAVA_OPTS -Dloader.path="lib/*" -jar   $BASE_HOME/$APP_JAR --spring.config.location=file:/home/trace-properties/trace-config-server/ >> /data/trace-log/config-server/"$log_file_url"  2>&1 &              
+	echo "started $APP_JAR"
 }
 
 function stop {
-        pid=` ps -ef |grep java | grep "$BASE_HOME/$APP_JAR" |awk '{print $2}'`
-        if [ -n "$pid"  ] ; then
-                kill -9 $pid
-        fi
-        echo "stoped $APP_JAR"
+	pid=` ps -ef |grep java | grep "$BASE_HOME/$APP_JAR" |awk '{print $2}'`
+	if [ -n "$pid"  ] ; then
+		kill -9 $pid
+	fi
+	echo "stoped $APP_JAR"
 }
 
 
 case "$work" in
-        "start" ) 
-                start ;
-                exit 1;
-                ;;
-        "status")
-                echo `status`;
-                exit 1;
-                ;;
-        "stop" )
-                stop;
-                exit 1;
-                ;;
-        "restart" )
-                stop 
-                sleep 5
-                start;
-                exit 1
-                ;;
-        * ) 
-                echo "unknow command !"
-                exit 1;
-                ;;
+	"start" ) 
+		start ;
+		exit 1;
+		;;
+	"status")
+		echo `status`;
+		exit 1;
+		;;
+	"stop" )
+		stop;
+		exit 1;
+		;;
+	"restart" )
+		stop 
+		sleep 5
+		start;
+		exit 1
+		;;
+	* ) 
+		echo "unknow command !"
+		exit 1;
+		;;
 esac
+
