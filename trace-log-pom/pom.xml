@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.candao.trace</groupId>
+	<artifactId>trace-log-pom</artifactId>
+	<version>0.0.1</version>
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.2.RELEASE</version>
+		<relativePath />
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<modules>
+		<module>trace-framework</module>
+		<module>trace-log</module>
+		<module>trace-config-server</module>
+		<module>trace-api-gateway</module>
+		<module>trace-service-registry-center</module>
+		<module>trace-demo-api</module>
+		<module>trace-demo-service</module>
+		<module>trace-user-api</module>
+		<module>trace-user-service</module>
+	</modules>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Dalston.SR1</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<profiles>
+		<!-- 本地开发  集群环境配置 -->
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<pom.active>dev</pom.active>
+				<pom.label>dev-branch</pom.label>
+				<pom.eureka.url>http://10.200.102.88:6006/eureka/</pom.eureka.url>
+			</properties>
+		</profile>
+		
+		<!-- k8s 集群环境配置 -->
+		<profile>
+			<id>qc</id>
+			<!-- <activation>
+				<activeByDefault>true</activeByDefault>
+			</activation> -->
+			<properties> 
+				<pom.active>qc</pom.active>
+				<pom.label>dev-branch</pom.label>
+				<pom.eureka.url>http://serviceregistrycenterha1:6106/eureka/,http://serviceregistrycenterha2:6206/eureka/,http://serviceregistrycenterha3:6306/eureka/</pom.eureka.url>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<pom.active>prod</pom.active>
+				<pom.label>master</pom.label>
+				<pom.eureka.url>http://dms-service-registry-center:6006/eureka</pom.eureka.url>
+			</properties>
+		</profile>
+	</profiles>
+</project>
