@@ -1,0 +1,13 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: trace-api-gateway-hpa
+  namespace: kube-trace
+spec:
+  scaleTargetRef:
+    apiVersion: v1
+    kind: ReplicationController
+    name: trace-api-gateway
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

@@ -1,0 +1,19 @@
+#alpine3.5 jdk8 长期支持版本,选择的原因是镜像小,启动快
+FROM 10.200.102.120/library/java8-alpine:0.0.1
+
+#定义维护人信息
+MAINTAINER jeromeLiu "jeromeliu@can-dao.com"
+
+#复制项目代码文件
+COPY ./sources/*.jar /home/irms-api-gateway/sources/
+COPY ./sources/lib/*.jar /home/irms-api-gateway/sources/lib/
+COPY ./bin/jetty.sh /home/irms-api-gateway/bin/
+
+RUN mkdir -p /data/irms-log/api-gateway/ && \
+	chmod 755 /data/irms-log/api-gateway/ && \
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
+
+EXPOSE 4002
+
+#CMD ["/bin/bash","-D"]
+ENTRYPOINT sh /home/irms-api-gateway/bin/jetty.sh start && /bin/bash

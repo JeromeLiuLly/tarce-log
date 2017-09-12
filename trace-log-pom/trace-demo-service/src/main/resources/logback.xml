@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="springAppName"
+		source="spring.application.name" value="demo-service"/>
+	<property name="file_path" value="/data/trace-log/${springAppName}/" />
+	<property name="save_day" value="30" />
+
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="rollingFile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="com.candao.trace.log.filter.MainThreadFilter"> </filter>
+		<file>${file_path}${springAppName}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${file_path}${springAppName}.log.%d{yyyyMMdd}-%i
+			</FileNamePattern>
+			<MaxHistory>${save_day}</MaxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>100MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>{"createTime":"%d{yyyy-MM-dd HH:mm:ss.SSS}","flag":%X{flag},"logIp":"%X{ip}","msg":"%X{mesg}","cacheOpt":"%X{cacheOpt}","cacheValSize":%X{cacheValSize},"className":"%X{className}","clientIp":"%X{clientIp}","clientType":"%X{clientType}","connCount":%X{connCount},"costTime":%X{costTime},"isErr":%X{isErr},"errName":"%X{errName}","keyOrSql":"%X{keyOrSql}","methodName":"%X{methodName}","restUrl":"%X{restUrl}","step":%X{step},"traceId":"%X{X-B3-TraceId:-}","parentSpanId":"%X{X-B3-ParentSpanId:-}","spanId":"%X{X-B3-SpanId:-}","sysName":"${springAppName}","logLever":"%level","thread":"%thread"}%n</pattern>
+		<!-- 
+			<pattern>${springAppName} %d{yyyy-MM-dd HH:mm:ss.SSS} %X{flag} [%X{X-B3-TraceId:-}-%X{X-B3-SpanId:-}-%X{X-B3-ParentSpanId:-}] %X{mesg} [%X{clientType}-%X{ip}-%X{clientIp}] [%X{cacheOpt}-%X{keyOrSql}-%X{cacheValSize}-%X{connCount}] [%X{className}-%X{methodName}] [%X{restUrl}-%X{costTime}] [%X{isErr}-%X{errName}] [%X{step}-%level-%thread]%n</pattern>
+		 -->
+			<!-- 
+			<providers>
+				<pattern>
+					<pattern>
+						{
+							"createTime":"%d{yyyy-MM-dd HH:mm:ss.SSS}",
+							"flag":"%X{flag}",
+							"logIp":"%X{ip}",
+							"msg":"%X{mesg}",
+							"cacheOpt":"%X{cacheOpt}",
+							"cacheValSize":"%X{cacheValSize}",
+							"className":"%X{className}",
+							"clientIp":"%X{clientIp}",
+							"clientType":"%X{clientType}",
+							"connCount":"%X{connCount}",
+							"costTime":"%X{costTime}",
+							"isErr":"%X{isErr}",
+							"errName":"%X{errName}",
+							"keyOrSql":"%X{keyOrSql}",
+							"methodName":"%X{methodName}",
+							"restUrl":"%X{restUrl}",
+							"step":"%X{step}",
+							"traceId":"%X{X-B3-TraceId:-}",
+							"parentSpanId":"%X{X-B3-ParentSpanId:-}",
+							"spanId":"%X{X-B3-SpanId:-}",
+							"sysName":"${springAppName}",
+							"logLever":"%level",
+							"thread":"%thread",
+							"stack_trace":"%exception{5}"
+						}
+					</pattern>
+				</pattern>
+			</providers>
+			-->
+		</encoder>
+	</appender>
+
+	<logger name="com.candao" level="INFO" additivity="false">
+		<appender-ref ref="rollingFile" />
+	</logger>
+
+	<!-- TRACE, DEBUG, INFO, WARN, ERROR, ALL, OFF -->
+	<root level="INFO">
+		<appender-ref ref="console" />
+	</root>
+</configuration>

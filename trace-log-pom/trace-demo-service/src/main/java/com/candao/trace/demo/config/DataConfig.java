@@ -6,8 +6,8 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 
-import com.candao.irms.framework.cache.RedisClient;
-import com.candao.irms.framework.util.FileUtil;
+import com.candao.trace.framework.cache.RedisClient;
+import com.candao.trace.framework.util.FileUtil;
 
 
 /**
