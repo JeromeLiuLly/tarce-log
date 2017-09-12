@@ -9,8 +9,8 @@ COPY ./sources/*.jar /home/trace-service-registry-center/sources/
 COPY ./sources/lib/*.jar /home/trace-service-registry-center/sources/lib/
 COPY ./bin/jetty.sh /home/trace-service-registry-center/bin/
 
-RUN mkdir -p /data/irms-log/service-registry-center/ && \
-	chmod 755 /data/irms-log/service-registry-center/ && \
+RUN mkdir -p /data/trace-log/service-registry-center/ && \
+	chmod 755 /data/trace-log/service-registry-center/ && \
     ln -sf /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 
 EXPOSE 6106 6206 6306

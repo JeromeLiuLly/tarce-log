@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: trace-config-server
+  labels:
+    name: trace-config-server
+  namespace: kube-trace
+spec:
+  replicas: 1 #设置副本数
+  selector:
+    name: trace-config-server
+  template:
+    metadata:
+      labels:
+        name: trace-config-server
+    spec:
+      containers:
+      - name: trace-config-server
+        image: 10.200.102.120/candao-trace/trace-config-server:0.0.1
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - sh
+              - /home/trace-config-server/bin/jetty.sh 
+              - stop
+        imagePullPolicy: Always
+        #resources:
+         # limits:   #资源设置限制
+         #   cpu:    
+         #   memory:
+          #requests:
+            #cpu: 200m  #/单位：core数，容器启动的初始可用数量
+            #memory:   #/单位：MiB/GiB ，容器启动的初始可以数量
+        ports:
+        - containerPort: 6007
+        #livenessProbe: #健康检查
+          #tcpSocket:
+            #port: 6007
+          #initialDelaySeconds: 30  #首次进行健康检查的等待时间
+          #timeoutSeconds: 10   #设置健康检查响应超时时间,如果出现超时就重启容器
+        volumeMounts:
+        - mountPath: /data/trace-log/config-server/
+          name: logs
+        - mountPath: /etc/localtime
+          name: tz-config
+        - mountPath: /home/trace-config-server/config/
+          name: properties-config
+      volumes:
+      - hostPath:
+          path: /data/trace-log/config-server/
+        name: logs
+      - hostPath:
+          path: /usr/share/zoneinfo/Asia/Shanghai
+        name: tz-config
+      - hostPath:
+          path: /home/trace-properties/trace-config-server/
+        name: properties-config
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    name: trace-config-server
+  name: trace-config-server
+  namespace: kube-trace
+spec:
+  type: NodePort
+  ports:
+  - port: 6007
+    targetPort: 6007
+    #nodePort: 30607 #6007=>30607该位置的节点端口号,官方的建议是使用高位端口号,防止冲突(30000-32767)
+  selector:
+    name: trace-config-server
+  externalIPs: 
+    - 10.200.102.122

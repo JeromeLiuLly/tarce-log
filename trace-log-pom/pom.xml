@@ -94,7 +94,7 @@
 			<properties>
 				<pom.active>dev</pom.active>
 				<pom.label>dev-branch</pom.label>
-				<pom.eureka.url>http://10.200.102.88:6006/eureka/</pom.eureka.url>
+				<pom.eureka.url>http://10.200.102.101:6006/eureka/</pom.eureka.url>
 			</properties>
 		</profile>
 		

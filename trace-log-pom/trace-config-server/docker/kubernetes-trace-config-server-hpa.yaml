@@ -1,0 +1,13 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: trace-config-server
+  namespace: kube-trace
+spec:
+  scaleTargetRef:
+    apiVersion: v1
+    kind: ReplicationController
+    name: trace-config-server
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80

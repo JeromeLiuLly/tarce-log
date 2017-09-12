@@ -1,17 +1,17 @@
 #!/bin/bash
 #docker_qc
-BASE_HOME="/home/trace-log/trace-service-registry-center/sources"
+BASE_HOME="/home/trace-log/trace-config-server/sources"
 #qc
-#BASE_HOME="/home/dockerfile/irms-service-registry-center/sources"
+#BASE_HOME="/home/dockerfile/trace-config-server/sources"
 
 
 cd $BASE_HOME
 work=$1
 now=$(date +%Y%m%d)
-log_file_url="trace-service-registry-center_${now}.log"
+log_file_url="trace-config-server_${now}.log"
 APP_START_DT=`date +"%Y%m%d"`
-#APP_JAR="trace-service-registry-center-0.0.1.jar"
-APP_JAR=`ls trace-service-registry-center-0.0.1.jar`
+#APP_JAR="trace-config-server-0.0.1.jar"
+APP_JAR=`ls trace-config-server-0.0.1.jar`
 JAVA_CMD="/usr/bin/java"
 
 JAVA_OPTS=" -server \
@@ -41,7 +41,7 @@ function start {
                 echo "app jetty is woring,do nothing!"
                 exit 1
         fi
-        $JAVA_CMD   $JAVA_OPTS -Dloader.path="lib/*" -jar   $BASE_HOME/$APP_JAR --spring.config.location=file:/home/trace-properties/trace-service-registry-center/ >> /data/trace-log/service-registry-center/"$log_file_url"  2>&1 & 
+        $JAVA_CMD   $JAVA_OPTS -Dloader.path="lib/*" -jar   $BASE_HOME/$APP_JAR --spring.config.location=file:/home/trace-properties/trace-config-server/ >> /data/trace-log/config-server/"$log_file_url"  2>&1 & 
         echo "started $APP_JAR"
 }
 
